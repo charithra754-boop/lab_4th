@@ -8,6 +8,15 @@
 
 int main() {
     int c1 = 7, c2 = 19, n0 = 1;
+    const char *csvFile = "q3a.csv";
+    
+    FILE *csv = fopen(csvFile, "w");
+    if (csv == NULL) {
+        perror("Unable to create CSV file");
+        return 1;
+    }
+    
+    fprintf(csv, "n,c1*n^2,f(n),c2*n^2\n");
     
     printf("Proving f(n) = 7n^2 + 7n + 5 is Theta(n^2)\n");
     printf("We choose c1 = %d, c2 = %d, and n0 = %d\n", c1, c2, n0);
@@ -19,6 +28,7 @@ int main() {
         int fn = 7 * n * n + 7 * n + 5;
         int c1n2 = c1 * n * n;
         int c2n2 = c2 * n * n;
+        fprintf(csv, "%d,%d,%d,%d\n", n, c1n2, fn, c2n2);
         printf("%-5d | %-10d | %-10d | %-10d", n, c1n2, fn, c2n2);
         if (c1n2 <= fn && fn <= c2n2) {
             printf(" (Holds)\n");
@@ -27,5 +37,7 @@ int main() {
         }
     }
     
+    fclose(csv);
+    printf("\nCSV output written to %s\n", csvFile);
     return 0;
 }

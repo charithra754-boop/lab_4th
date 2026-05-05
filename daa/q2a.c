@@ -8,6 +8,15 @@
 int main() {
     int c = 1;
     int n0 = 1;
+    const char *csvFile = "q2a.csv";
+    
+    FILE *csv = fopen(csvFile, "w");
+    if (csv == NULL) {
+        perror("Unable to create CSV file");
+        return 1;
+    }
+    
+    fprintf(csv, "n,f(n),c*n\n");
     
     printf("Proving f(n) = 3n^2 + 4n + 3 is Omega(n)\n");
     printf("We choose c = %d and n0 = %d\n", c, n0);
@@ -18,6 +27,7 @@ int main() {
     for (int n = 10; n <= 30; n++) {
         int fn = 3 * n * n + 4 * n + 3;
         int cn = c * n;
+        fprintf(csv, "%d,%d,%d\n", n, fn, cn);
         printf("%-5d | %-10d | %-10d", n, fn, cn);
         if (fn >= cn) {
             printf(" (Condition Holds)\n");
@@ -26,5 +36,7 @@ int main() {
         }
     }
     
+    fclose(csv);
+    printf("\nCSV output written to %s\n", csvFile);
     return 0;
 }
