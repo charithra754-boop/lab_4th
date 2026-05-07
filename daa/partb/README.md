@@ -229,3 +229,180 @@ Focus on the greedy step: always finalize the nearest unvisited node, then relax
 - `q6b.c`: Dijkstra Shortest Path — `O(V^2)`
 
 Keep this README handy when practicing, and use the pseudocode patterns to build the C code from memory.
+
+---
+
+## Part B exam write-up sheet
+
+### General answer structure
+1. Name the algorithm.
+2. Describe the goal.
+3. List the main data structures.
+4. Explain the core loop or recursion.
+5. State the time complexity.
+
+### Example structure for an answer
+- Algorithm: Breadth-First Search (BFS)
+- Goal: Visit all reachable nodes from the source in level order.
+- Data structures: `visited[]`, `queue[]`, `front`, `rear`.
+- Steps: mark source visited, enqueue it, then repeat dequeue + explore neighbors.
+- Complexity: `O(V + E)`.
+
+### Ready-to-write code skeletons
+
+#### Stable Marriage
+```c
+#include <stdio.h>
+#include <stdbool.h>
+
+#define N 3
+int prefer[2*N][N] = { ... };
+
+bool loyal(int w, int m, int m1) { ... }
+void stableMarriage(void) {
+    int wPartner[N];
+    bool mFree[N];
+    // initialize
+    while (there is a free man) {
+        // man proposes to next woman
+        // accept if free or if woman prefers new proposal
+    }
+    // print pairs
+}
+int main(void) { stableMarriage(); return 0; }
+```
+
+#### BFS
+```c
+#include <stdio.h>
+#include <stdbool.h>
+#define N 5
+int graph[N][N] = { ... };
+
+void bfs(int source) {
+    bool visited[N] = {false};
+    int queue[N], front = 0, rear = 0;
+    visited[source] = true;
+    queue[rear++] = source;
+    while (front < rear) {
+        int u = queue[front++];
+        for (int v = 0; v < N; v++) {
+            if (graph[u][v] && !visited[v]) {
+                visited[v] = true;
+                queue[rear++] = v;
+            }
+        }
+    }
+}
+int main(void) { bfs(0); return 0; }
+```
+
+#### Merge Sort
+```c
+#include <stdio.h>
+
+void merge(int arr[], int l, int m, int r) { ... }
+void mergeSort(int arr[], int l, int r) {
+    if (l < r) {
+        int m = l + (r-l)/2;
+        mergeSort(arr, l, m);
+        mergeSort(arr, m+1, r);
+        merge(arr, l, m, r);
+    }
+}
+int main(void) {
+    int arr[] = { ... };
+    mergeSort(arr, 0, size-1);
+    return 0;
+}
+```
+
+#### Inversion Count
+```c
+#include <stdio.h>
+
+int mergeAndCount(int arr[], int temp[], int l, int m, int r) { ... }
+int mergeSortAndCount(int arr[], int temp[], int l, int r) {
+    if (l < r) {
+        int m = (l + r)/2;
+        count += mergeSortAndCount(arr, temp, l, m);
+        count += mergeSortAndCount(arr, temp, m+1, r);
+        count += mergeAndCount(arr, temp, l, m+1, r);
+    }
+    return count;
+}
+int main(void) { ... }
+```
+
+#### Bipartite Check
+```c
+#include <stdio.h>
+#define N 10
+int graph[N][N] = { ... };
+
+int main(void) {
+    int color[N];
+    for (int i = 0; i < N; i++) color[i] = -1;
+    int queue[N], front = 0, rear = 0;
+    color[0] = 0;
+    queue[rear++] = 0;
+    while (front < rear) {
+        int u = queue[front++];
+        for (int v = 0; v < N; v++) {
+            if (graph[u][v]) {
+                if (color[v] == -1) {
+                    color[v] = 1 - color[u];
+                    queue[rear++] = v;
+                } else if (color[v] == color[u]) {
+                    printf("Not bipartite\n");
+                }
+            }
+        }
+    }
+    return 0;
+}
+```
+
+#### Dijkstra
+```c
+#include <stdio.h>
+#include <limits.h>
+#define V 5
+#define INF INT_MAX
+
+void dijkstra(int graph[V][V], int src) {
+    int dist[V], visited[V] = {0};
+    for (int i = 0; i < V; i++) dist[i] = INF;
+    dist[src] = 0;
+    for (int i = 0; i < V-1; i++) {
+        int u = minDistance(dist, visited);
+        visited[u] = 1;
+        for (int v = 0; v < V; v++) {
+            if (!visited[v] && graph[u][v] && dist[u] != INF && dist[u]+graph[u][v] < dist[v]) {
+                dist[v] = dist[u] + graph[u][v];
+            }
+        }
+    }
+}
+int main(void) { ... }
+```
+
+---
+
+## Fast Part B writing guide
+
+### If you need to write code in the exam
+- Start by writing `#include <stdio.h>` and `main()`.
+- Write the constant sizes and arrays first.
+- Write the main algorithm loop next.
+- Print the result in a clear table or list.
+
+### Best exam phrase for each question
+- Q1: "Use the Gale-Shapley stable marriage method."
+- Q2: "Use BFS with a queue to explore all reachable nodes."
+- Q3: "Use merge sort with divide and conquer."
+- Q4: "Use modified merge sort to count inversions."
+- Q5: "Use BFS coloring to test bipartite property."
+- Q6: "Use Dijkstra’s greedy shortest path algorithm."
+
+Use this section to make your answer precise and easy to write under time pressure.

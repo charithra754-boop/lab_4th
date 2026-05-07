@@ -1,109 +1,161 @@
-# DAA Part A — Generalized Proofs and Exam Write-Up
+# DAA Part A — Quick Exam Guide
 
-This README explains the common structure of the Part A questions and gives you a memorization pattern for writing the full program in the exam.
-
----
-
-## What all Part A questions have in common
-
-Each program is a proof by inequality for one of these asymptotic relations:
-
-- `O(n)` or `O(n^2)` — upper bound
-- `Ω(n)` — lower bound
-- `Θ(n^2)` — tight bound using both upper and lower constants
-
-The general flow is:
-
-1. Identify the function `f(n)`.
-2. Choose constants `c`, `c1`, `c2`, and a threshold `n0`.
-3. Write the inequality for all `n >= n0`.
-4. Check the inequality for several sample values of `n`.
-5. Print the result clearly.
-
-This is the exact pattern used by `general.c`.
+This README gives you the fastest way to write the Part A program and the exact exam-style write-up for every question.
+Use it to memorize the code pattern, the constants, and the proof structure.
 
 ---
 
-## General pattern for the code
+## What Part A is really asking
+Each program proves a function belongs to one of these asymptotic classes:
 
-Use these shared pieces in every program:
+- `O(...)` = upper bound
+- `Ω(...)` = lower bound
+- `Θ(...)` = tight bound (both upper and lower)
 
-- `computeFn(n)` — evaluate the formula `f(n)`.
-- `powerTerm(n, p)` — compute `n^p`, where `p` is 1 or 2.
-- `checkRelation(...)` — verify the chosen inequality.
-- `for (n = 10; n <= 30; n++)` — test a range of values.
-- `printf` and `fprintf` — print results to the console and CSV.
-
-This fixed structure helps you memorize one template and reuse it.
-
----
-
-## Exam write-up structure
-
-For each question, write the answer in this order:
-
-1. **State the function:**
-   - Example: `f(n) = 7n + 5`
-2. **State the target class:**
-   - `O(n)`, `Ω(n)`, or `Θ(n^2)`.
-3. **Present constants:**
-   - `c = 8`, `n0 = 5` for `O(n)`.
-   - `c = 5`, `n0 = 1` for `Ω(n)`.
-   - `c1 = 7`, `c2 = 19`, `n0 = 1` for `Θ(n^2)`.
-4. **Write the inequality:**
-   - `f(n) <= c*n`, `f(n) >= c*n`, or `c1*n^2 <= f(n) <= c2*n^2`.
-5. **Explain why it holds for all `n >= n0`.**
-6. **Conclude:**
-   - `Therefore, f(n) = O(n).`
-   - `Therefore, f(n) = Ω(n).`
-   - `Therefore, f(n) = Θ(n^2).`
+Every question uses the same idea:
+- choose constant(s),
+- write the inequality,
+- verify it for `n >= n0`,
+- print the result.
 
 ---
 
-## Key memorization tips
+## Memorization aid: the simple formula
 
-- Think of every question as the same program with different constants:
-  - `q1a`, `q4a`: upper bound `O(...)`
-  - `q2a`, `q5a`: lower bound `Ω(...)`
-  - `q3a`: tight bound `Θ(...)`
-  - `q6a`: upper bound on `n^2`
+For each problem, fill in this template:
 
-- Use this phrase:
-  - "Choose constants, test the inequality, then conclude the bound."
+- `f(n) = ...`
+- target: `O(g(n))`, `Ω(g(n))` or `Θ(g(n))`
+- choose `c` and `n0` (or `c1`, `c2`, `n0`)
+- check `f(n)` vs bound for `n >= n0`
 
-- If you need to write code fast, remember:
-  - `f(n)` formula
-  - `if (relation == O) then f(n) <= c * n^p`
-  - `if (relation == Ω) then f(n) >= c * n^p`
-  - `if (relation == Θ) then c1*n^p <= f(n) <= c2*n^p`
+The code pattern is always the same.
 
 ---
 
-## Question-specific summary
+## Exam write-up template
 
-- **q1a:** `f(n) = 7n + 5`, prove `O(n)` with `c = 8`, `n0 = 5`.
-- **q2a:** `f(n) = 3n^2 + 4n + 3`, prove `Ω(n)` with `c = 1`, `n0 = 1`.
-- **q3a:** `f(n) = 7n^2 + 7n + 5`, prove `Θ(n^2)` with `c1 = 7`, `c2 = 19`, `n0 = 1`.
-- **q4a:** `f(n) = 4n + 3`, prove `O(n)` with `c = 5`, `n0 = 3`.
-- **q5a:** `f(n) = 5n + 5`, prove `Ω(n)` with `c = 5`, `n0 = 1`.
-- **q6a:** `f(n) = 8n^2 + 3n + 3`, prove `O(n^2)` with `c = 14`, `n0 = 1`.
+### Step 1: State the problem
+Example:
+> Prove that `f(n) = 7n + 5` is `O(n)`.
+
+### Step 2: Declare constants
+Example:
+> Choose `c = 8` and `n0 = 5`.
+
+### Step 3: Write the inequality
+- For `O(n)`: `7n + 5 <= 8n` for all `n >= 5`.
+- For `Ω(n)`: `3n^2 + 4n + 3 >= 1*n` for all `n >= 1`.
+- For `Θ(n^2)`: `7n^2 <= 7n^2 + 7n + 5 <= 19n^2` for all `n >= 1`.
+
+### Step 4: Explain why it holds
+- `O`: `5 <= n` when `n >= 5`.
+- `Ω`: the polynomial is always larger than `n` because every term is positive.
+- `Θ`: the extra lower-order terms are bounded by a constant multiple of `n^2`.
+
+### Step 5: Conclude
+Example:
+> Therefore, `f(n) = 7n + 5` is `O(n)`.
 
 ---
 
-## How to use `general.c`
+## Code structure to write quickly
 
-- Compile and run it to see the same structure applied to every question.
-- It prints the inequality result and writes CSV files.
-- It is a reusable template for the exam, since the code pattern stays constant.
+### Template for `O` or `Ω`
+
+```c
+#include <stdio.h>
+
+int main(void) {
+    int c = ...;
+    int n0 = ...;
+
+    for (int n = n0; n <= 30; n++) {
+        long long fn = ...;         // compute f(n)
+        long long bound = c * ...;  // c*n or c*n*n
+        int holds = ...;            // fn <= bound or fn >= bound
+
+        printf("n=%d | f(n)=%lld | bound=%lld %s\n",
+               n, fn, bound, holds ? "(holds)" : "(fails)");
+    }
+    return 0;
+}
+```
+
+### Template for `Θ`
+
+```c
+#include <stdio.h>
+
+int main(void) {
+    int c1 = ...;
+    int c2 = ...;
+    int n0 = ...;
+
+    for (int n = n0; n <= 30; n++) {
+        long long fn = ...;
+        long long low = c1 * n * n;
+        long long high = c2 * n * n;
+        int holds = (low <= fn && fn <= high);
+
+        printf("n=%d | %lld <= %lld <= %lld %s\n",
+               n, low, fn, high, holds ? "(holds)" : "(fails)");
+    }
+    return 0;
+}
+```
 
 ---
 
-## Quick exam-friendly checklist
+## Question-by-question cheat sheet
 
-1. Write the `#include <stdio.h>` and `main()`.
-2. Define the function and constants.
-3. Use a `for` loop from `n = 10` to `n = 30`.
-4. Print the inequality status.
-5. Write a clear conclusion sentence.
+### q1a
+- `f(n) = 7n + 5`
+- Target: `O(n)`
+- Constants: `c = 8`, `n0 = 5`
+- Check: `7n + 5 <= 8n`
+- Write-up phrase: "upper bound with `c*n`."
 
-Keep this README and `general.c` together to remember the pattern quickly.
+### q2a
+- `f(n) = 3n^2 + 4n + 3`
+- Target: `Ω(n)`
+- Constants: `c = 1`, `n0 = 1`
+- Check: `3n^2 + 4n + 3 >= 1*n`
+- Write-up phrase: "lower bound with `c*n`."
+
+### q3a
+- `f(n) = 7n^2 + 7n + 5`
+- Target: `Θ(n^2)`
+- Constants: `c1 = 7`, `c2 = 19`, `n0 = 1`
+- Check: `7n^2 <= f(n) <= 19n^2`
+- Write-up phrase: "tight bound with both constants."
+
+### q4a
+- `f(n) = 4n + 3`
+- Target: `O(n)`
+- Constants: `c = 5`, `n0 = 3`
+- Check: `4n + 3 <= 5n`
+
+### q5a
+- `f(n) = 5n + 5`
+- Target: `Ω(n)`
+- Constants: `c = 5`, `n0 = 1`
+- Check: `5n + 5 >= 5n`
+
+### q6a
+- `f(n) = 8n^2 + 3n + 3`
+- Target: `O(n^2)`
+- Constants: `c = 14`, `n0 = 1`
+- Check: `8n^2 + 3n + 3 <= 14n^2`
+
+---
+
+## Fast memory anchors
+
+- `O` = upper bound = `<=`
+- `Ω` = lower bound = `>=`
+- `Θ` = both bounds
+- Always keep the form: `f(n)` and `c * g(n)`.
+- In Part A, `g(n)` is always `n` or `n^2`.
+
+Use this README to quickly turn any Part A question into a full exam answer and a complete C program.
