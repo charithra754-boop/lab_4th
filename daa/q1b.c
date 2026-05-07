@@ -1,30 +1,25 @@
 #include <stdio.h>
 #include <stdbool.h>
-
 #define N 3
-
 // Men: A(0), B(1), C(2)
 // Women: V(0), W(1), X(2)
-
 int prefer[2 * N][N] = {
     // Men's preferences (A, B, C)
-    {0, 1, 2}, // A: V, W, X
-    {1, 0, 2}, // B: W, V, X
-    {0, 1, 2}, // C: V, W, X
+    {0, 1, 2}, 
+    {1, 0, 2},
+    {0, 1, 2}, 
     // Women's preferences (V, W, X)
-    {0, 1, 2}, // V: A, B, C
-    {1, 2, 0}, // W: B, C, A
-    {2, 0, 1}  // X: C, A, B
+    {0, 1, 2}, 
+    {1, 2, 0}, 
+    {2, 0, 1} 
 };
-
-bool wPrefersM1OverM(int prefer[2 * N][N], int w, int m, int m1) {
+bool foundbetter(int prefer[2 * N][N], int w, int m, int m1) {
     for (int i = 0; i < N; i++) {
         if (prefer[w + N][i] == m1) return true;
         if (prefer[w + N][i] == m) return false;
     }
     return false;
 }
-
 void stableMarriage() {
     int wPartner[N];
     bool mFree[N];
@@ -50,7 +45,7 @@ void stableMarriage() {
                 freeCount--;
             } else {
                 int m1 = wPartner[w];
-                if (wPrefersM1OverM(prefer, w, m, m1) == false) {
+                if (foundbetter(prefer, w, m, m1) == true) {
                     wPartner[w] = m;
                     mFree[m] = false;
                     mFree[m1] = true;
