@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Course Registration</title>
+    <style>
+        body { font-family: Arial; text-align: center; }
+        form { border: 1px solid #ccc; padding: 20px; display: inline-block; }
+    </style>
+</head>
+<body>
+    <h2>Course Registration</h2>
+    <!-- form with fields and an ID so JavaScript can handle submission -->
+    <form id="regForm">
+        Name: <input type="text" id="name" required><br><br>
+        Email: <input type="email" id="email" required><br><br>
+        Phone: <input type="tel" id="phone" pattern="[0-9]{10}" placeholder="10 digits" required><br><br>
+        Course: <select id="course">
+            <option>MERN Stack</option>
+            <option>Python</option>
+        </select><br><br>
+        <button type="submit">Register</button>
+    </form>
+    <!-- this paragraph will show the registration result -->
+    <p id="msg"></p>
+    <script>
+        // find the form element by ID
+        const regForm = document.getElementById('regForm');
+        // find the message paragraph by ID
+        const msg = document.getElementById('msg');
+
+        // listen for the form submit event
+        regForm.addEventListener('submit', function(event) {
+            // stop the browser from sending the form to the server
+            event.preventDefault();
+
+            // read the values entered by the user
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const phone = document.getElementById('phone').value;
+
+            // show a confirmation message without reloading the page
+            msg.innerText = `Registered ${name} (${email}, ${phone})`;
+        });
+    </script>
+</body>
+</html>

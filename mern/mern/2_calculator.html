@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Calculator</title>
+    <style>
+        body { display: grid; place-items: center; height: 100vh; margin: 0; background: #e0e0e0; font-family: sans-serif; }
+        .calc { display: grid; grid-template-columns: repeat(4, 60px); gap: 10px; background: #333; padding: 15px; border-radius: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.3); }
+        input { grid-column: span 4; height: 50px; text-align: right; font-size: 24px; padding: 5px; border: none; background: #a1b5a3; font-family: monospace; }
+        button { height: 55px; font-size: 20px; font-weight: bold; border: none; border-radius: 6px; background: #f0f0f0; cursor: pointer; }
+        button:active { filter: brightness(0.8); }
+        .op { background: #ff9500; color: white; }
+    </style>
+</head>
+<body>
+    <!-- calculator container: buttons are inside this element -->
+    <div class="calc" id="calc">
+        <!-- display field for calculations; readonly prevents typing directly -->
+        <input id="i" readonly>
+        <button>7</button><button>8</button><button>9</button><button class="op">/</button>
+        <button>4</button><button>5</button><button>6</button><button class="op">*</button>
+        <button>1</button><button>2</button><button>3</button><button class="op">-</button>
+        <button class="op">C</button><button>0</button><button class="op">=</button><button class="op">+</button>
+    </div>
+    <script>
+        // select the calculator display input by ID
+        const input = document.getElementById('i');
+        // select the container holding the calculator buttons
+        const calc = document.getElementById('calc');
+
+        // listen for clicks inside the calculator container
+        calc.addEventListener('click', function(event) {
+            const t = event.target;
+            // ignore clicks that are not on buttons
+            if (t.tagName !== 'BUTTON') return;
+
+            const value = t.innerText;
+            if (value === 'C') {
+                // clear the display when C is clicked
+                input.value = '';
+            } else if (value === '=') {
+                // evaluate the expression when = is clicked
+                try {
+                    input.value = input.value ? eval(input.value) : '';
+                } catch {
+                    // show Error for invalid expressions
+                    input.value = 'Error';
+                }
+            } else {
+                // append the clicked button text to the display
+                input.value += value;
+            }
+        });
+    </script>
+</body>
+</html>

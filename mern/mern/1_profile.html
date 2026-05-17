@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User Profile</title>
+    <style>
+        body { display: grid; place-items: center; height: 100vh; margin: 0; background: #f0f2f5; font-family: sans-serif; }
+        .card { background: white; padding: 25px; text-align: center; border-radius: 15px; box-shadow: 0 8px 20px rgba(0,0,0,0.08); width: 220px; }
+        img { width: 90px; height: 90px; border-radius: 50%; object-fit: cover; background: #eee; }
+        p { color: #666; margin: 8px 0 20px; }
+        button { background: #007bff; color: white; border: none; padding: 8px 16px; border-radius: 20px; cursor: pointer; font-weight: bold; }
+        button:active { filter: brightness(0.9); }
+    </style>
+</head>
+<body>
+
+    <!-- card container holds the profile layout -->
+    <div class="card">
+        <!-- image with an ID so JavaScript can change it later -->
+        <img id="pic" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150" alt="Photo">
+        <!-- heading with an ID for dynamic text update -->
+        <h2 id="name" style="margin:10px 0 0">John Doe</h2>
+        <!-- paragraph with an ID for dynamic text update -->
+        <p id="bio">Software Developer</p>
+        <!-- button will trigger the profile update in JavaScript -->
+        <button id="updateBtn">Update Profile</button>
+    </div>
+
+    <script>
+        // find the name element by its ID
+        const nameEl = document.getElementById('name');
+        // find the bio paragraph by its ID
+        const bioEl = document.getElementById('bio');
+        // find the profile picture image by its ID
+        const picEl = document.getElementById('pic');
+        // find the update button by its ID
+        const updateBtn = document.getElementById('updateBtn');
+
+        // attach a click listener to the button
+        updateBtn.addEventListener('click', updateProfile);
+
+        // function that runs when the button is clicked
+        function updateProfile() {
+            // change the text inside the name heading
+            nameEl.innerText = "Jane Smith";
+            // change the text inside the bio paragraph
+            bioEl.innerText = "Web Designer";
+            // change the image source to a new picture
+            picEl.src = "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150";
+        }
+    </script>
+
+</body>
+</html>

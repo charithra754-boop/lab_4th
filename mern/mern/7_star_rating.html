@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Star Rating</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        .star { font-size: 40px; cursor: pointer; color: gray; }
+        .selected { color: orange; }
+    </style>
+</head>
+<body>
+    <h2>Star Rating System</h2>
+    <div id="rating">
+        <span class="star" data-v="1">★</span>
+        <span class="star" data-v="2">★</span>
+        <span class="star" data-v="3">★</span>
+        <span class="star" data-v="4">★</span>
+        <span class="star" data-v="5">★</span>
+    </div>
+    <script>
+        $(document).ready(function(){
+            $(".star").click(function(){
+                let v = $(this).data("v");
+                $(".star").removeClass("selected");
+                $(".star").each(function(){
+                    if($(this).data("v") <= v) $(this).addClass("selected");
+                });
+            });
+        });
+    </script>
+</body>
+</html>

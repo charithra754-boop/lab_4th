@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Text Animation</title>
+    <style>
+        body { font-family: Arial; text-align: center; margin-top: 100px; }
+        #text { font-size: 20px; transition: 0.5s; }
+    </style>
+</head>
+<body>
+    <!-- heading that changes when the button is clicked -->
+    <h1 id="text">ANIMATING TEXT</h1>
+    <!-- button to trigger the animation function -->
+    <button id="changeBtn">Change</button>
+    <script>
+        // find the heading element by ID
+        const text = document.getElementById('text');
+        // find the button element by ID
+        const changeBtn = document.getElementById('changeBtn');
+        // track whether the text is currently large or small
+        let isLarge = false;
+
+        // run animateText when the button is clicked
+        changeBtn.addEventListener('click', animateText);
+
+        function animateText() {
+            if (!isLarge) {
+                // enlarge the text and change color to red
+                text.style.fontSize = "50px";
+                text.style.color = "red";
+                text.innerText = "ENLARGED";
+            } else {
+                // shrink the text and change color to blue
+                text.style.fontSize = "20px";
+                text.style.color = "blue";
+                text.innerText = "SHRUNK";
+            }
+            // flip the state for the next click
+            isLarge = !isLarge;
+        }
+    </script>
+</body>
+</html>

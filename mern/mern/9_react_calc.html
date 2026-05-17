@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>React Calculator</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body>
+    <div id="root"></div>
+    <script type="text/babel">
+        function App() {
+            const [a, setA] = React.useState(0);
+            const [b, setB] = React.useState(0);
+            const [res, setRes] = React.useState(0);
+            return (
+                <div style={{textAlign: "center"}}>
+                    <h2>React Calculator</h2>
+                    <input type="number" onChange={(e)=>setA(Number(e.target.value))} />
+                    <input type="number" onChange={(e)=>setB(Number(e.target.value))} /><br/>
+                    <button onClick={()=>setRes(a+b)}>+</button>
+                    <button onClick={()=>setRes(a-b)}>-</button>
+                    <button onClick={()=>setRes(a*b)}>*</button>
+                    <button onClick={()=>setRes(a/b)}>/</button>
+                    <h3>Result: {res}</h3>
+                </div>
+            );
+        }
+        ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+    </script>
+</body>
+</html>
