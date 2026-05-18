@@ -1,43 +1,33 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Text Animation</title>
+    <title>Automatic Text Animation</title>
     <style>
-        body { font-family: Arial; text-align: center; margin-top: 100px; }
-        #text { font-size: 20px; transition: 0.5s; }
+        body { display: grid; place-items: center; height: 100vh; margin: 0; background: #f4f4f4; font-family: Arial, sans-serif; }
+        #text { font-size: 20px; transition: all 0.5s ease-in-out; font-weight: bold; color: blue; }
     </style>
 </head>
 <body>
-    <!-- heading that changes when the button is clicked -->
-    <h1 id="text">ANIMATING TEXT</h1>
-    <!-- button to trigger the animation function -->
-    <button id="changeBtn">Change</button>
+
+    <h1 id="text">STARTING...</h1>
+
     <script>
-        // find the heading element by ID
-        const text = document.getElementById('text');
-        // find the button element by ID
-        const changeBtn = document.getElementById('changeBtn');
-        // track whether the text is currently large or small
         let isLarge = false;
 
-        // run animateText when the button is clicked
-        changeBtn.addEventListener('click', animateText);
-
-        function animateText() {
+        // Automatically runs the loop every 1500 milliseconds (1.5 seconds)
+        setInterval(() => {
             if (!isLarge) {
-                // enlarge the text and change color to red
                 text.style.fontSize = "50px";
                 text.style.color = "red";
                 text.innerText = "ENLARGED";
             } else {
-                // shrink the text and change color to blue
                 text.style.fontSize = "20px";
                 text.style.color = "blue";
                 text.innerText = "SHRUNK";
             }
-            // flip the state for the next click
             isLarge = !isLarge;
-        }
+        }, 1500);
     </script>
+
 </body>
 </html>
