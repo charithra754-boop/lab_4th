@@ -5,15 +5,68 @@
     <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        body { 
+            display: grid; 
+            place-items: center; 
+            height: 100vh; 
+            margin: 0; 
+            background: #eef2f3; 
+            font-family: sans-serif; 
+        }
+        .card { 
+            padding: 40px; 
+            border-radius: 20px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1); 
+            text-align: center; 
+            width: 200px;
+            transition: all 0.4s ease;
+        }
+        .bulb { 
+            width: 80px; 
+            height: 80px; 
+            border-radius: 50%; 
+            margin: 20px auto; 
+            transition: all 0.4s ease;
+        }
+        button { 
+            padding: 10px 25px; 
+            font-size: 16px; 
+            font-weight: bold; 
+            border: none; 
+            border-radius: 25px; 
+            cursor: pointer; 
+            color: white;
+            transition: background 0.3s;
+        }
+    </style>
 </head>
 <body>
     <div id="root"></div>
     <script type="text/babel">
         function App() {
             const [on, setOn] = React.useState(true);
+
             return (
-                <div style={{textAlign: "center"}}>
-                    <button onClick={()=>setOn(!on)}>{on ? "ON" : "OFF"}</button>
+                /* 1. Dynamic Card Background & Text Color */
+                <div className="card" style={{ backgroundColor: on ? "#ffffff" : "#1a1a1a", color: on ? "#333" : "#fff" }}>
+                    
+                    <h2>Room is {on ? "Lit" : "Dark"}</h2>
+                    
+                    /* 2. Dynamic Bulb Color & Glow Effect */
+                    <div className="bulb" style={{ 
+                        backgroundColor: on ? "#ffcc00" : "#444", 
+                        boxShadow: on ? "0 0 25px #ffcc00" : "none" 
+                    }}></div>
+                    
+                    /* 3. Dynamic Button Color */
+                    <button 
+                        onClick={() => setOn(!on)}
+                        style={{ backgroundColor: on ? "#e63946" : "#2a9d8f" }}
+                    >
+                        Turn {on ? "OFF" : "ON"}
+                    </button>
+
                 </div>
             );
         }
