@@ -4,56 +4,36 @@ This file collects all JavaScript-only scripts from the `mern/mern` examples, or
 
 ## 1. Question 1 — `1_profile.html`
 ```js
-// find the name element by its ID
 const nameEl = document.getElementById('name');
-// find the bio paragraph by its ID
 const bioEl = document.getElementById('bio');
-// find the profile picture image by its ID
 const picEl = document.getElementById('pic');
-// find the update button by its ID
 const updateBtn = document.getElementById('updateBtn');
-
-// attach a click listener to the button
 updateBtn.addEventListener('click', updateProfile);
-
-// function that runs when the button is clicked
 function updateProfile() {
-    // change the text inside the name heading
     nameEl.innerText = "Jane Smith";
-    // change the text inside the bio paragraph
     bioEl.innerText = "Web Designer";
-    // change the image source to a new picture
     picEl.src = "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150";
 }
 ```
 
 ## 2. Question 2 — `2_calculator.html`
 ```js
-// select the calculator display input by ID
 const input = document.getElementById('i');
-// select the container holding the calculator buttons
 const calc = document.getElementById('calc');
-
-// listen for clicks inside the calculator container
 calc.addEventListener('click', function(event) {
     const t = event.target;
-    // ignore clicks that are not on buttons
     if (t.tagName !== 'BUTTON') return;
 
     const value = t.innerText;
     if (value === 'C') {
-        // clear the display when C is clicked
         input.value = '';
     } else if (value === '=') {
-        // evaluate the expression when = is clicked
         try {
             input.value = input.value ? eval(input.value) : '';
         } catch {
-            // show Error for invalid expressions
             input.value = 'Error';
         }
     } else {
-        // append the clicked button text to the display
         input.value += value;
     }
 });
@@ -61,22 +41,13 @@ calc.addEventListener('click', function(event) {
 
 ## 3. Question 4 — `4_registration.html`
 ```js
-// find the form element by ID
 const regForm = document.getElementById('regForm');
-// find the message paragraph by ID
 const msg = document.getElementById('msg');
-
-// listen for the form submit event
 regForm.addEventListener('submit', function(event) {
-    // stop the browser from sending the form to the server
     event.preventDefault();
-
-    // read the values entered by the user
     const name = document.getElementById('name').value;
     const email = document.getElementById('email').value;
     const phone = document.getElementById('phone').value;
-
-    // show a confirmation message without reloading the page
     msg.innerText = `Registered ${name} (${email}, ${phone})`;
 });
 ```
@@ -84,8 +55,6 @@ regForm.addEventListener('submit', function(event) {
 ## 4. Question 5 — `5_animation.html`
 ```js
 let isLarge = false;
-
-// Automatically runs the loop every 1500 milliseconds (1.5 seconds)
 setInterval(() => {
     if (!isLarge) {
         text.style.fontSize = "50px";
@@ -102,29 +71,20 @@ setInterval(() => {
 
 ## 5. Question 6 — `6_password.html`
 ```js
-// find the password input field by ID
 const passInput = document.getElementById('pass');
-// find the strength label by ID
 const strength = document.getElementById('strength');
-
-// run the check function each time the input value changes
 passInput.addEventListener('input', check);
 
 function check() {
-    // read the current password value
     const p = passInput.value;
-    // define the rule: letters + numbers + at least 8 chars
     const regex = /^(?=.*[a-zA-Z])(?=.*[0-9]).{8,}$/;
 
     if (p.length === 0) {
-        // if the input is empty, show nothing
         strength.innerText = "";
     } else if (regex.test(p)) {
-        // if password matches the rule, show strong
         strength.innerText = "Strong (Alphanumeric + 8 chars)";
         strength.style.color = "green";
     } else {
-        // otherwise show weak and make it red
         strength.innerText = "Weak (Need Letter, Number & 8+ length)";
         strength.style.color = "red";
     }
@@ -163,19 +123,44 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);
 ## 8. Question 9 — `9_react_calc.html`
 ```jsx
 function App() {
-    const [a, setA] = React.useState(0);
-    const [b, setB] = React.useState(0);
-    const [res, setRes] = React.useState(0);
+    const [input, setInput] = React.useState('');
+
+    function handleClick(value) {
+        if (value === 'C') {
+            setInput('');
+        } else if (value === '=') {
+            try {
+                setInput(input ? String(eval(input)) : '');
+            } catch {
+                setInput('Error');
+            }
+        } else {
+            setInput(input + value);
+        }
+    }
+
     return (
-        <div style={{textAlign: "center"}}>
-            <h2>React Calculator</h2>
-            <input type="number" onChange={(e)=>setA(Number(e.target.value))} />
-            <input type="number" onChange={(e)=>setB(Number(e.target.value))} /><br/>
-            <button onClick={()=>setRes(a+b)}>+</button>
-            <button onClick={()=>setRes(a-b)}>-</button>
-            <button onClick={()=>setRes(a*b)}>*</button>
-            <button onClick={()=>setRes(a/b)}>/</button>
-            <h3>Result: {res}</h3>
+        <div className="calc">
+            <input value={input} readOnly />
+            <button onClick={() => handleClick('7')}>7</button>
+            <button onClick={() => handleClick('8')}>8</button>
+            <button onClick={() => handleClick('9')}>9</button>
+            <button className="op" onClick={() => handleClick('/')}>/</button>
+
+            <button onClick={() => handleClick('4')}>4</button>
+            <button onClick={() => handleClick('5')}>5</button>
+            <button onClick={() => handleClick('6')}>6</button>
+            <button className="op" onClick={() => handleClick('*')}>*</button>
+
+            <button onClick={() => handleClick('1')}>1</button>
+            <button onClick={() => handleClick('2')}>2</button>
+            <button onClick={() => handleClick('3')}>3</button>
+            <button className="op" onClick={() => handleClick('-')}>-</button>
+
+            <button className="op" onClick={() => handleClick('C')}>C</button>
+            <button onClick={() => handleClick('0')}>0</button>
+            <button className="op" onClick={() => handleClick('=')}>=</button>
+            <button className="op" onClick={() => handleClick('+')}>+</button>
         </div>
     );
 }

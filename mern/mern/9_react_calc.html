@@ -5,27 +5,62 @@
     <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        body { display: grid; place-items: center; height: 100vh; margin: 0; background: #e0e0e0; font-family: sans-serif; }
+        .calc { display: grid; grid-template-columns: repeat(4, 60px); gap: 10px; background: #333; padding: 15px; border-radius: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.3); }
+        input { grid-column: span 4; height: 50px; text-align: right; font-size: 24px; padding: 5px; border: none; background: #a1b5a3; font-family: monospace; }
+        button { height: 55px; font-size: 20px; font-weight: bold; border: none; border-radius: 6px; background: #f0f0f0; cursor: pointer; }
+        button:active { filter: brightness(0.8); }
+        .op { background: #ff9500; color: white; }
+    </style>
 </head>
 <body>
     <div id="root"></div>
+
     <script type="text/babel">
         function App() {
-            const [a, setA] = React.useState(0);
-            const [b, setB] = React.useState(0);
-            const [res, setRes] = React.useState(0);
+            const [input, setInput] = React.useState('');
+
+            function handleClick(value) {
+                if (value === 'C') {
+                    setInput('');
+                } else if (value === '=') {
+                    try {
+                        setInput(input ? String(eval(input)) : '');
+                    } catch {
+                        setInput('Error');
+                    }
+                } else {
+                    setInput(input + value);
+                }
+            }
+
             return (
-                <div style={{textAlign: "center"}}>
-                    <h2>React Calculator</h2>
-                    <input type="number" onChange={(e)=>setA(Number(e.target.value))} />
-                    <input type="number" onChange={(e)=>setB(Number(e.target.value))} /><br/>
-                    <button onClick={()=>setRes(a+b)}>+</button>
-                    <button onClick={()=>setRes(a-b)}>-</button>
-                    <button onClick={()=>setRes(a*b)}>*</button>
-                    <button onClick={()=>setRes(a/b)}>/</button>
-                    <h3>Result: {res}</h3>
+                <div className="calc">
+                    <input value={input} readOnly />
+                    <button onClick={() => handleClick('7')}>7</button>
+                    <button onClick={() => handleClick('8')}>8</button>
+                    <button onClick={() => handleClick('9')}>9</button>
+                    <button className="op" onClick={() => handleClick('/')}>/</button>
+
+                    <button onClick={() => handleClick('4')}>4</button>
+                    <button onClick={() => handleClick('5')}>5</button>
+                    <button onClick={() => handleClick('6')}>6</button>
+                    <button className="op" onClick={() => handleClick('*')}>*</button>
+
+                    <button onClick={() => handleClick('1')}>1</button>
+                    <button onClick={() => handleClick('2')}>2</button>
+                    <button onClick={() => handleClick('3')}>3</button>
+                    <button className="op" onClick={() => handleClick('-')}>-</button>
+
+                    <button className="op" onClick={() => handleClick('C')}>C</button>
+                    <button onClick={() => handleClick('0')}>0</button>
+                    <button className="op" onClick={() => handleClick('=')}>=</button>
+                    <button className="op" onClick={() => handleClick('+')}>+</button>
                 </div>
             );
         }
+
         ReactDOM.createRoot(document.getElementById('root')).render(<App />);
     </script>
 </body>
