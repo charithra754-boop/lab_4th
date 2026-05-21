@@ -2,105 +2,67 @@
 #include <stdlib.h>
 
 #define V 5
+#define E 8
 
-struct Edge {
-    int src, dest, weight;
-};
+struct Edge { int src, dest, weight; };
+struct subset { int parent, rank; };
 
-struct Graph {
-    int v, e;
-    struct Edge* edge;
-};
-
-struct Graph* createGraph(int v, int e) {
-    struct Graph* graph = (struct Graph*)malloc(sizeof(struct Graph));
-    graph->v = v;
-    graph->e = e;
-    graph->edge = (struct Edge*)malloc(graph->e * sizeof(struct Edge));
-    return graph;
+// Find returns the set representative for vertex i.
+// This helps detect whether two vertices are already connected.
+int find(struct subset subsets[V], int i) {
+    return subsets[i].parent == i ? i : (subsets[i].parent = find(subsets, subsets[i].parent));
 }
 
-struct subset {
-    int parent;
-    int rank;
-};
-
-int find(struct subset subsets[], int i) {
-    if (subsets[i].parent != i)
-        subsets[i].parent = find(subsets, subsets[i].parent);
-    return subsets[i].parent;
-}
-
-void Union(struct subset subsets[], int x, int y) {
-    int xroot = find(subsets, x);
-    int yroot = find(subsets, y);
-    if (subsets[xroot].rank < subsets[yroot].rank)
-        subsets[xroot].parent = yroot;
-    else if (subsets[xroot].rank > subsets[yroot].rank)
-        subsets[yroot].parent = xroot;
+// unite merges two sets by rank so the tree stays shallow.
+// This keeps future find operations fast.
+void unite(struct subset subsets[V], int x, int y) {
+    x = find(subsets, x);
+    y = find(subsets, y);
+    if (x == y) return;
+    if (subsets[x].rank < subsets[y].rank)
+        subsets[x].parent = y;
+    else if (subsets[y].rank < subsets[x].rank)
+        subsets[y].parent = x;
     else {
-        subsets[yroot].parent = xroot;
-        subsets[xroot].rank++;
+        subsets[y].parent = x;
+        subsets[x].rank++;
     }
 }
 
-int myComp(const void* a, const void* b) {
-    struct Edge* a1 = (struct Edge*)a;
-    struct Edge* b1 = (struct Edge*)b;
-    return a1->weight > b1->weight;
+// Compare edges by weight so qsort can order them from smallest to largest.
+int compareEdges(const void* a, const void* b) {
+    return ((struct Edge*)a)->weight - ((struct Edge*)b)->weight;
 }
 
-void KruskalMST(struct Graph* graph) {
-    int v = graph->v;
-    struct Edge result[v];
-    int e = 0;
-    int i = 0;
+// Kruskal's algorithm adds the smallest edges first,
+// but only when they connect two different components.
+int main() {
+    struct Edge edges[E] = {
+        {0,1,10}, {0,3,5}, {0,4,5}, {1,2,1},
+        {1,3,6}, {2,3,2}, {3,4,3}, {4,2,7}
+    };
 
-    qsort(graph->edge, graph->e, sizeof(graph->edge[0]), myComp);
-
-    struct subset* subsets = (struct subset*)malloc(v * sizeof(struct subset));
-    for (int v_idx = 0; v_idx < v; ++v_idx) {
-        subsets[v_idx].parent = v_idx;
-        subsets[v_idx].rank = 0;
+    struct subset subsets[V];
+    for (int i = 0; i < V; i++) {
+        subsets[i].parent = i;
+        subsets[i].rank = 0;
     }
 
-    while (e < v - 1 && i < graph->e) {
-        struct Edge next_edge = graph->edge[i++];
-        int x = find(subsets, next_edge.src);
-        int y = find(subsets, next_edge.dest);
+    qsort(edges, E, sizeof(edges[0]), compareEdges);
+
+    int cost = 0;
+    printf("Edge  Weight\n");
+    for (int i = 0, count = 0; i < E && count < V - 1; i++) {
+        int x = find(subsets, edges[i].src);
+        int y = find(subsets, edges[i].dest);
         if (x != y) {
-            result[e++] = next_edge;
-            Union(subsets, x, y);
+            unite(subsets, x, y);
+            printf("%d -- %d    %d\n", edges[i].src + 1, edges[i].dest + 1, edges[i].weight);
+            cost += edges[i].weight;
+            count++;
         }
     }
 
-    printf("Following are the edges in the constructed MST:\n");
-    int minimumCost = 0;
-    for (i = 0; i < e; ++i) {
-        printf("%d -- %d == %d\n", result[i].src + 1, result[i].dest + 1, result[i].weight);
-        minimumCost += result[i].weight;
-    }
-    printf("Minimum Cost for Spanning Tree: %d\n", minimumCost);
-}
-
-int main() {
-    int e = 8;
-    struct Graph* graph = createGraph(V, e);
-
-    // 1-2: 10, 1-4: 5, 1-5: 5, 2-3: 1, 2-4: 6, 3-4: 2, 4-5: 3, 5-3: 7
-    graph->edge[0].src = 0; graph->edge[0].dest = 1; graph->edge[0].weight = 10;
-    graph->edge[1].src = 0; graph->edge[1].dest = 3; graph->edge[1].weight = 5;
-    graph->edge[2].src = 0; graph->edge[2].dest = 4; graph->edge[2].weight = 5;
-    graph->edge[3].src = 1; graph->edge[3].dest = 2; graph->edge[3].weight = 1;
-    graph->edge[4].src = 1; graph->edge[4].dest = 3; graph->edge[4].weight = 6;
-    graph->edge[5].src = 2; graph->edge[5].dest = 3; graph->edge[5].weight = 2;
-    graph->edge[6].src = 3; graph->edge[6].dest = 4; graph->edge[6].weight = 3;
-    graph->edge[7].src = 4; graph->edge[7].dest = 2; graph->edge[7].weight = 7;
-
-    printf("Algorithm: Kruskal's (Greedy Solution for Phone Company)\n");
-    KruskalMST(graph);
-    printf("Design Strategy: Greedy Method\n");
-    printf("Time Complexity: O(E log E) or O(E log V)\n");
-
+    printf("Minimum Cost for Spanning Tree: %d\n", cost);
     return 0;
 }

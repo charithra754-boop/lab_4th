@@ -5,44 +5,49 @@
 #define V 6
 #define INF INT_MAX
 
-// Prim's algorithm for MST
-void primMST(int graph[V][V]) {
-    int parent[V];
-    int key[V];
-    bool mstSet[V];
+// This function finds the next vertex to add to the MST.
+// It scans all vertices and returns the unused vertex with the smallest key.
+int minKey(int key[V], bool used[V]) {
+    int min = INF, minIndex = -1;
+    for (int i = 0; i < V; i++)
+        if (!used[i] && key[i] < min)
+            min = key[i], minIndex = i;
+    return minIndex;
+}
 
-    for (int i = 0; i < V; i++) {
-        key[i] = INF;
-        mstSet[i] = false;
-    }
+// Prim's algorithm builds an MST by always choosing the cheapest edge
+// that connects a new vertex to the already-built tree.
+void prim(int graph[V][V]) {
+    int parent[V], key[V];
+    bool used[V] = {false};
 
-    key[0] = 0;
-    parent[0] = -1;
+    parent[0] = -1;  // root of MST has no parent
+    key[0] = 0;      // start from vertex 0
+    for (int i = 1; i < V; i++)
+        key[i] = INF;  // other vertices are not connected yet
 
+    // repeat until MST has V-1 edges
     for (int count = 0; count < V - 1; count++) {
-        int min = INF, u;
+        int u = minKey(key, used);  // choose the next cheapest vertex
+        used[u] = true;             // include it in the MST
+        // update neighbors of u: if the edge u-v is cheaper than current best, replace it
         for (int v = 0; v < V; v++)
-            if (mstSet[v] == false && key[v] < min)
-                min = key[v], u = v;
-
-        mstSet[u] = true;
-
-        for (int v = 0; v < V; v++)
-            if (graph[u][v] && mstSet[v] == false && graph[u][v] < key[v])
-                parent[v] = u, key[v] = graph[u][v];
+            if (graph[u][v] && !used[v] && graph[u][v] < key[v]) {
+                parent[v] = u;
+                key[v] = graph[u][v];
+            }
     }
 
-    int totalCost = 0;
-    printf("Edge \tWeight\n");
+    int total = 0;
+    printf("Edge  Weight\n");
     for (int i = 1; i < V; i++) {
-        printf("%d - %d \t%d \n", parent[i] + 1, i + 1, graph[i][parent[i]]);
-        totalCost += graph[i][parent[i]];
+        printf("%d - %d    %d\n", parent[i] + 1, i + 1, graph[i][parent[i]]);
+        total += graph[i][parent[i]];
     }
-    printf("Minimum Cost Achieved: %d\n", totalCost);
+    printf("Minimum Cost Achieved: %d\n", total);
 }
 
 int main() {
-    // Adjacency matrix representation of the graph
     int graph[V][V] = {
         {0, 2, 0, 8, 0, 0},
         {2, 0, 3, 1, 0, 0},
@@ -52,10 +57,6 @@ int main() {
         {0, 0, 8, 0, 3, 0}
     };
 
-    printf("Algorithm: Prim's (Greedy Solution for Car Driver)\n");
-    primMST(graph);
-    printf("Design Strategy: Greedy Method\n");
-    printf("Time Complexity: O(V^2)\n");
-
+    prim(graph);
     return 0;
 }
